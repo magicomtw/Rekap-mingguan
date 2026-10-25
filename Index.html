@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Konveksi Busana Muslim - CV Management</title>
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Terpisah -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- External Libraries for Export & UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body data-theme="emerald">
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <div>
+                    <h1>Rekap Konveksi Muslim</h1>
+                    <p class="subtitle">Sistem Rekapitulasi Produksi & Upah Borongan</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-selector">
+                    <label for="themeSelect"><i class="fa-solid fa-palette"></i> Tema UI:</label>
+                    <select id="themeSelect" onchange="changeTheme(this.value)">
+                        <option value="emerald">🌲 Emerald Velvet</option>
+                        <option value="sage">🌿 Sage Clean</option>
+                        <option value="terracotta">☕ Warm Terracotta</option>
+                        <option value="indigo">🫐 Nordic Slate</option>
+                        <option value="dark">🌙 OLED Dark Mode</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-danger" onclick="confirmResetAll()">
+                    <i class="fa-solid fa-trash-arrow-up"></i> Reset Data Minggu Ini
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- Stat Cards Summary -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon icon-users"><i class="fa-solid fa-users-viewfinder"></i></div>
+                <div class="stat-data">
+                    <span class="stat-title">Total Pekerja Aktif</span>
+                    <h2 id="statWorkers">0 Orang</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon icon-pcs"><i class="fa-solid fa-shirt"></i></div>
+                <div class="stat-data">
+                    <span class="stat-title">Total Pcs Dikerjakan</span>
+                    <h2 id="statPcs">0 Pcs</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon icon-payroll"><i class="fa-solid fa-wallet"></i></div>
+                <div class="stat-data">
+                    <span class="stat-title">Total Pengeluaran Gaji</span>
+                    <h2 id="statPayroll">Rp 0</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Section: Input Data Pekerja -->
+        <section class="card form-card">
+            <div class="card-header">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Input Catatan Borongan Pekerja</h3>
+                <span class="badge-period" id="periodDisplay">Periode Minggu Ini</span>
+            </div>
+
+            <form id="boronganForm" onsubmit="saveWorkerEntry(event)">
+                <div class="form-row-top">
+                    <div class="form-group flex-2">
+                        <label for="workerName"><i class="fa-solid fa-user"></i> Nama Pemilik / Pekerja</label>
+                        <input type="text" id="workerName" list="workerList" placeholder="Ketik atau pilih nama pekerja..." required autocomplete="off">
+                        <datalist id="workerList"></datalist>
+                    </div>
+
+                    <div class="form-group flex-1">
+                        <label for="entryNote"><i class="fa-solid fa-tag"></i> Catatan Khusus (Opsional)</label>
+                        <input type="text" id="entryNote" placeholder="Contoh: Shift Pagi / Lembur">
+                    </div>
+                </div>
+
+                <!-- Dynamic Item Lines Table -->
+                <div class="table-wrapper">
+                    <table class="dynamic-table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 22%;">Nama Barang</th>
+                                <th style="width: 18%;">Tugas Pekerjaan</th>
+                                <th style="width: 22%;">Jenis / Detail Busana</th>
+                                <th style="width: 12%;">Jumlah (Pcs)</th>
+                                <th style="width: 15%;">Tarif / Pcs (Rp)</th>
+                                <th style="width: 15%;">Subtotal Upah</th>
+                                <th style="width: 6%;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTbody">
+                            <!-- Dynamic Rows Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="btn btn-secondary" onclick="addDynamicRow()">
+                        <i class="fa-solid fa-plus-circle"></i> Tambah Item Barang
+                    </button>
+                    
+                    <div class="subtotal-display">
+                        <span>Total Catatan Orang Ini:</span>
+                        <strong id="formTotalSummary">0 Pcs = Rp 0</strong>
+                        <button type="submit" class="btn btn-primary btn-save">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan Pekerja
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Section 1: Tabel Rekap Gaji Pekerja -->
+        <section class="card display-card">
+            <div class="card-header">
+                <div>
+                    <h3><i class="fa-solid fa-file-invoice-dollar"></i> Tabel Rekapitulasi Gaji Pekerja</h3>
+                    <p class="card-desc">Digunakan untuk acuan pembagian gaji mingguan per individu.</p>
+                </div>
+                <div class="export-group">
+                    <button class="btn-export btn-png" onclick="exportTablePNG('payrollTableSection', 'Rekap_Gaji_Pekerja')">
+                        <i class="fa-solid fa-image"></i> Gambar (PNG)
+                    </button>
+                    <button class="btn-export btn-pdf" onclick="exportTablePDF('payrollTableSection', 'Rekap_Gaji_Pekerja')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </button>
+                    <button class="btn-export btn-excel" onclick="exportExcel('payrollTableSection', 'Rekap_Gaji_Pekerja')">
+                        <i class="fa-solid fa-file-excel"></i> Excel
+                    </button>
+                </div>
+            </div>
+
+            <div id="payrollTableSection" class="printable-area">
+                <div class="print-header">
+                    <h2>CV KONVEKSI BUSANA MUSLIM</h2>
+                    <h3>LAPORAN REKAPITULASI GAJI & UPAH BORONGAN PEKERJA</h3>
+                    <p id="printPeriod1">Periode: Oktober 2026</p>
+                    <hr>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Pekerja</th>
+                                <th>Rincian Pekerjaan Selesai</th>
+                                <th>Total Pcs</th>
+                                <th>Total Upah Gaji</th>
+                                <th class="no-print">Aksi Management</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payrollTbody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-total-row">
+                                <td colspan="3" style="text-align: right; font-weight: 700;">TOTAL AKUMULASI KESELURUHAN:</td>
+                                <td id="totalPcsPayroll">0 Pcs</td>
+                                <td id="totalAmountPayroll">Rp 0</td>
+                                <td class="no-print"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Tabel Rekap Hasil Jahit Khusus Atasan -->
+        <section class="card display-card">
+            <div class="card-header">
+                <div>
+                    <h3><i class="fa-solid fa-user-tie"></i> Tabel Laporan Hasil Produksi Jahit (Khusus Pimpinan)</h3>
+                    <p class="card-desc">Rekapitulasi seluruh hasil jahitan yang disatukan per jenis busana untuk diserahkan ke atasan.</p>
+                </div>
+                <div class="export-group">
+                    <button class="btn-export btn-png" onclick="exportTablePNG('sewingReportSection', 'Laporan_Jahit_Pimpinan')">
+                        <i class="fa-solid fa-image"></i> Gambar (PNG)
+                    </button>
+                    <button class="btn-export btn-pdf" onclick="exportTablePDF('sewingReportSection', 'Laporan_Jahit_Pimpinan')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </button>
+                    <button class="btn-export btn-excel" onclick="exportExcel('sewingReportSection', 'Laporan_Jahit_Pimpinan')">
+                        <i class="fa-solid fa-file-excel"></i> Excel
+                    </button>
+                </div>
+            </div>
+
+            <div id="sewingReportSection" class="printable-area">
+                <div class="print-header">
+                    <h2>CV KONVEKSI BUSANA MUSLIM</h2>
+                    <h3>LAPORAN HASIL PRODUKSI JAHITAN SELESAI (KEPADA ATASAN)</h3>
+                    <p id="printPeriod2">Periode: Oktober 2026</p>
+                    <hr>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Busana / Barang</th>
+                                <th>Jenis / Detail Variasi</th>
+                                <th>Total Produksi Jahit (Pcs)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sewingTbody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-total-row">
+                                <td colspan="3" style="text-align: right; font-weight: 700;">TOTAL HASIL JAHITAN MINGGU INI:</td>
+                                <td id="totalSewingPcs">0 Pcs</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="print-signature">
+                    <div class="signature-box">
+                        <p>Dibuat Oleh (Admin),</p>
+                        <br><br><br>
+                        <p><strong>( Admin Konveksi )</strong></p>
+                    </div>
+                    <div class="signature-box">
+                        <p>Disetujui Oleh (Pimpinan),</p>
+                        <br><br><br>
+                        <p><strong>( Owner / Manager )</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS Terpisah -->
+    <script src="script.js"></script>
+</body>
+</html>
