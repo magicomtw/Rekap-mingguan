@@ -225,22 +225,35 @@ function renderDashboard() {
 function renderPayroll() {
     const tbody = document.getElementById('payrollTbody');
     tbody.innerHTML = '';
-    let totalAllPcs = 0;
     let totalAllNominal = 0;
+    const workerTotals = {};
 
     if (workerRecords.length === 0) {
         tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color: var(--text-muted);">Teu waka aya catetan data minggu ieu.</td></tr>`;
-        document.getElementById('payrollFooterBadge').innerText = 'Total Item : 0 Pcs';
         document.getElementById('totalNominalPayrollBadge').innerText = 'Total Sadaya Gajih: Rp 0';
+        document.getElementById('workerSummaryList').innerText = '-';
         return;
     }
 
     let globalNo = 1;
     workerRecords.forEach((rec, recIdx) => {
-        rec.items.forEach((item, itemIdx) => {
-            totalAllPcs += item.qty;
+        let workerSum = 0;
+        rec.items.forEach(item => {
+            workerSum += item.subtotal;
             totalAllNominal += item.subtotal;
+        });
+        workerTotals[rec.workerName] = (workerTotals[rec.workerName] || 0) + workerSum;
+    });
 
+    // Render rincian teks per orang
+    let summaryHtml = '';
+    for (const [wName, wTotal] of Object.entries(workerTotals)) {
+        summaryHtml += `<span style="background: var(--card-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--card-border);"><strong>${wName}:</strong> ${formatRupiah(wTotal)}</span>`;
+    }
+    document.getElementById('workerSummaryList').innerHTML = summaryHtml;
+
+    workerRecords.forEach((rec, recIdx) => {
+        rec.items.forEach((item, itemIdx) => {
             const tr = document.createElement('tr');
             
             let actionTd = '';
@@ -269,7 +282,6 @@ function renderPayroll() {
         });
     });
 
-    document.getElementById('payrollFooterBadge').innerText = `Total Item : ${totalAllPcs} Pcs`;
     document.getElementById('totalNominalPayrollBadge').innerText = `Total Sadaya Gajih: ${formatRupiah(totalAllNominal)}`;
 }
 
@@ -355,7 +367,7 @@ function getTemporaryExportTable(containerId) {
         if (text === 'Wangun / Jenis') th.innerText = 'Jenis';
         if (text === 'Ukuran') th.innerText = 'Ukuran';
         if (text === 'Warna') th.innerText = 'Warna';
-        if (text === 'Pagawean') th.innerText = 'Tugas';
+        if (text === 'Tugas') th.innerText = 'Tugas';
         if (text === 'Jumlah Pcs') th.innerText = 'Jumlah Pcs';
         if (text === 'Total Upah Gajih') th.innerText = 'Total Gaji';
         if (text === 'Total Produksi Jahit') th.innerText = 'Total Produksi Jahit';
