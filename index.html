@@ -54,22 +54,19 @@
         <section class="aesthetic-card">
             <div class="card-header-flex">
                 <div class="card-title-area">
-                    <h3><i class="fa-solid fa-pen-nib"></i> Lebetkeun Catetan Borongan Padamel</h3>
+                    <h3 id="formTitle"><i class="fa-solid fa-pen-nib"></i> Lebetkeun Catetan Borongan Padamel</h3>
                     <p class="card-desc">Mangga kintunkeun seratan padamelan harian atanapi mingguan kasebat di handap ieu.</p>
                 </div>
-                <span class="total-badge-box" id="periodDisplay">Minggu Ieu</span>
+                <span class="total-badge-box" id="periodDisplay">-</span>
             </div>
 
             <form id="boronganForm" onsubmit="saveWorkerEntry(event)">
-                <div class="form-grid">
+                <input type="hidden" id="editIndex" value="">
+                <div class="form-grid" style="grid-template-columns: 1fr;">
                     <div class="input-group">
                         <label><i class="fa-solid fa-user"></i> Nami Padamel / Mitra</label>
                         <input type="text" id="workerName" list="workerList" placeholder="Ketik atanapi pilih nami padamel..." required autocomplete="off">
                         <datalist id="workerList"></datalist>
-                    </div>
-                    <div class="input-group">
-                        <label><i class="fa-solid fa-tag"></i> Katrangan / Shift (Opsional)</label>
-                        <input type="text" id="entryNote" placeholder="Conto: Lembur / Shift 1">
                     </div>
                 </div>
 
@@ -77,12 +74,15 @@
                     <table class="aesthetic-table" id="itemsTable">
                         <thead>
                             <tr>
-                                <th style="width: 25%;">Nami Barang</th>
-                                <th style="width: 18%;">Pagawean</th>
-                                <th style="width: 22%;">Wangun / Detail</th>
-                                <th style="width: 10%;">Jumlah</th>
-                                <th style="width: 15%;">Tarif (Rp)</th>
-                                <th style="width: 10%;">Lampah</th>
+                                <th style="width: 18%;">Nami Barang</th>
+                                <th style="width: 14%;">Wangun / Jenis</th>
+                                <th style="width: 10%;">Ukuran</th>
+                                <th style="width: 12%;">Warna</th>
+                                <th style="width: 12%;">Pagawean</th>
+                                <th style="width: 8%;">Jumlah</th>
+                                <th style="width: 11%;">Tarif (Rp)</th>
+                                <th style="width: 10%;">Total Upah</th>
+                                <th style="width: 5%;">Lampah</th>
                             </tr>
                         </thead>
                         <tbody id="itemsTbody"></tbody>
@@ -95,7 +95,7 @@
                     </button>
                     <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                         <span style="font-weight: 600;">Jumlah Total: <strong id="formTotalSummary" style="color: var(--primary); font-size: 16px;">0 Pcs = Rp 0</strong></span>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
                             <i class="fa-solid fa-floppy-disk"></i> Simpen Catetan
                         </button>
                     </div>
@@ -124,16 +124,21 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nami Padamel</th>
-                                <th>Rincian Padamelan Selesai</th>
-                                <th>Total Pcs</th>
+                                <th>Nami Barang</th>
+                                <th>Wangun / Jenis</th>
+                                <th>Ukuran</th>
+                                <th>Warna</th>
+                                <th>Pagawean</th>
+                                <th>Jumlah Pcs</th>
                                 <th>Total Upah Gajih</th>
-                                <th class="no-print" style="width: 60px;">Aksi</th>
+                                <th class="no-print" style="width: 80px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="payrollTbody"></tbody>
                     </table>
                 </div>
-                <div class="table-footer-badge">
+                <div class="table-footer-badge" style="justify-content: space-between; align-items: center;">
+                    <div class="total-badge-box" id="totalNominalPayrollBadge" style="background: var(--card-bg); color: var(--primary); border: 1px solid var(--card-border);">Total Sadaya Gajih: Rp 0</div>
                     <div class="total-badge-box" id="payrollFooterBadge">Total Item : 0 Pcs</div>
                 </div>
             </div>
@@ -144,7 +149,7 @@
             <div class="card-header-flex">
                 <div class="card-title-area">
                     <h3><i class="fa-solid fa-clipboard-list"></i> Laporan Hasil Jahit (Kanggo Pimpinan)</h3>
-                    <p class="card-desc">Sadaya barang disatukeun khusus kana tugas jahit kanggo laporan minggu ieu.</p>
+                    <p class="card-desc">Sadaya barang disatukeun khusus kana tugas jahit kalawan rinci.</p>
                 </div>
                 <div class="export-actions">
                     <button class="btn-export" onclick="exportTablePNG('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
@@ -160,15 +165,14 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nami Barang</th>
-                                <th>Wangun / Variasi</th>
+                                <th>Wangun / Jenis</th>
+                                <th>Ukuran</th>
+                                <th>Warna</th>
                                 <th>Total Produksi Jahit</th>
                             </tr>
                         </thead>
                         <tbody id="sewingTbody"></tbody>
                     </table>
-                </div>
-                <div class="table-footer-badge">
-                    <div class="total-badge-box" id="sewingFooterBadge">Total Item : 0 Pcs</div>
                 </div>
             </div>
         </section>
