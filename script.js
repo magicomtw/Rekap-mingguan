@@ -195,16 +195,71 @@ function confirmResetAll() {
     });
 }
 
+/* FUNGSI EKSPOR DENGAN PENYESUAIAN BAHASA INDONESIA */
+function getTemporaryExportTable(containerId) {
+    const originalSection = document.getElementById(containerId);
+    const clone = originalSection.cloneNode(true);
+    
+    // Terjemahkan header tabel kloningan ke Bahasa Indonesia sebelum diunduh
+    clone.querySelectorAll('th').forEach(th => {
+        let text = th.innerText.trim();
+        if (text === 'Nami Padamel') th.innerText = 'Nama Pekerja';
+        if (text === 'Rincian Padamelan Selesai') th.innerText = 'Rincian Pekerjaan Selesai';
+        if (text === 'Total Upah Gajih') th.innerText = 'Total Upah Gaji';
+        if (text === 'Nami Barang') th.innerText = 'Nama Barang';
+        if (text === 'Wangun / Variasi') th.innerText = 'Jenis / Variasi';
+        if (text === 'Total Produksi Jahit') th.innerText = 'Total Produksi Jahit';
+        if (text === 'Aksi') th.innerText = '';
+    });
+
+    // Hapus kolom tombol aksi pada tabel kloningan agar tidak ikut terunduh
+    clone.querySelectorAll('tr').forEach(tr => {
+        const lastCell = tr.lastElementChild;
+        if (lastCell && (lastCell.classList.contains('no-print') || lastCell.innerHTML.includes('trash'))) {
+            lastCell.remove();
+        }
+    });
+
+    return clone;
+}
+
 function exportTablePNG(id, filename) {
-    html2canvas(document.getElementById(id), { scale: 2 }).then(canvas => {
-        const link = document.createElement('a'); link.download = `${filename}.png`; link.href = canvas.toDataURL(); link.click();
+    const exportElement = getTemporaryExportTable(id);
+    document.body.appendChild(exportElement);
+    exportElement.style.position = 'absolute';
+    exportElement.style.left = '-9999px';
+
+    html2canvas(exportElement, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a'); 
+        link.download = `${filename}.png`; 
+        link.href = canvas.toDataURL(); 
+        link.click();
+        exportElement.remove();
     });
 }
+
 function exportTablePDF(id, filename) {
-    html2pdf().set({ margin: 0.5, filename: `${filename}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(document.getElementById(id)).save();
+    const exportElement = getTemporaryExportTable(id);
+    document.body.appendChild(exportElement);
+    exportElement.style.position = 'absolute';
+    exportElement.style.left = '-9999px';
+
+    html2pdf().set({ 
+        margin: 0.5, 
+        filename: `${filename}.pdf`, 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { scale: 2 }, 
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } 
+    }).from(exportElement).save().then(() => {
+        exportElement.remove();
+    });
 }
+
 function exportExcel(id, filename) {
-    const wb = XLSX.utils.table_to_book(document.getElementById(id).querySelector('table'), { sheet: "Laporan" });
+    const exportElement = getTemporaryExportTable(id);
+    const table = exportElement.querySelector('table');
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Laporan" });
     XLSX.writeFile(wb, `${filename}.xlsx`);
 }
+
 function formatRupiah(num) { return 'Rp ' + num.toLocaleString('id-ID'); }
