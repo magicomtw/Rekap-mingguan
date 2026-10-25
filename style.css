@@ -1,13 +1,12 @@
 /* ==========================================================================
-   TEMA WARNA & ORNAMEN LATAR BELAKANG ESTETIS
+   TEMA WARNA & GAYA ESTETIS
    ========================================================================== */
 :root {
     --font-main: 'Plus Jakarta Sans', sans-serif;
     --font-heading: 'Playfair Display', serif;
     
-    /* 1. Tema Sage (Nuansa Daun & Botani) */
     --bg-body: #eef2ec;
-    --card-bg: rgba(249, 251, 248, 0.95);
+    --card-bg: #f9fbf8;
     --card-border: #d4e0d0;
     --text-main: #2d3732;
     --text-muted: #5c6b63;
@@ -20,16 +19,11 @@
     --badge-bg: #4a6b5d;
     --badge-text: #ffffff;
     --shadow: 0 10px 30px rgba(74, 107, 93, 0.08);
-    
-    /* Pola Ornamen Dedaunan Halus (SVG Background) */
-    --bg-ornament: radial-gradient(#d4e0d0 1px, transparent 1px);
-    --bg-size: 20px 20px;
 }
 
-/* 2. Pastel Soft (Nuansa Terracotta & Elegan) */
 [data-theme="pastel"] {
     --bg-body: #fbf6f4;
-    --card-bg: rgba(255, 253, 252, 0.95);
+    --card-bg: #fffdfc;
     --card-border: #eddcd9;
     --text-main: #4a3b38;
     --text-muted: #8a7370;
@@ -42,14 +36,11 @@
     --badge-bg: #d48379;
     --badge-text: #ffffff;
     --shadow: 0 10px 30px rgba(212, 131, 121, 0.08);
-    --bg-ornament: radial-gradient(#eddcd9 1.5px, transparent 1.5px);
-    --bg-size: 24px 24px;
 }
 
-/* 3. Dark Elegan (Nuansa Mewah Gelap) */
 [data-theme="dark"] {
     --bg-body: #121518;
-    --card-bg: rgba(26, 31, 36, 0.95);
+    --card-bg: #1a1f24;
     --card-border: #2c353d;
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
@@ -62,14 +53,11 @@
     --badge-bg: #d4af37;
     --badge-text: #121518;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    --bg-ornament: radial-gradient(#2c353d 1px, transparent 1px);
-    --bg-size: 22px 22px;
 }
 
-/* 4. Forest Natural (Nuansa Alam & Pegunungan) */
 [data-theme="forest"] {
     --bg-body: #1e2822;
-    --card-bg: rgba(39, 53, 45, 0.95);
+    --card-bg: #27352d;
     --card-border: #3a4d41;
     --text-main: #ecfdf5;
     --text-muted: #9ca3af;
@@ -82,14 +70,11 @@
     --badge-bg: #059669;
     --badge-text: #ffffff;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    --bg-ornament: radial-gradient(#3a4d41 1.2px, transparent 1.2px);
-    --bg-size: 25px 25px;
 }
 
-/* 5. Light Blue Fresh (Nuansa Biru Langit Lembut) */
 [data-theme="lightblue"] {
     --bg-body: #f0f4f8;
-    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-bg: #ffffff;
     --card-border: #cbd5e1;
     --text-main: #1e293b;
     --text-muted: #64748b;
@@ -102,14 +87,11 @@
     --badge-bg: #0284c7;
     --badge-text: #ffffff;
     --shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
-    --bg-ornament: radial-gradient(#cbd5e1 1px, transparent 1px);
-    --bg-size: 20px 20px;
 }
 
-/* 6. Beige Vintage (Nuansa Klasik Kayu/Kertas) */
 [data-theme="beige"] {
     --bg-body: #f7f4ed;
-    --card-bg: rgba(255, 251, 242, 0.95);
+    --card-bg: #fffbf2;
     --card-border: #e6dac3;
     --text-main: #4a3f35;
     --text-muted: #8c7a6b;
@@ -122,26 +104,14 @@
     --badge-bg: #b45309;
     --badge-text: #ffffff;
     --shadow: 0 10px 30px rgba(180, 83, 9, 0.08);
-    --bg-ornament: radial-gradient(#e6dac3 1.2px, transparent 1.2px);
-    --bg-size: 22px 22px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
-
-/* Menerapkan Background Pola Ornamen Estetik pada Body */
-body {
-    background-color: var(--bg-body);
-    background-image: var(--bg-ornament);
-    background-size: var(--bg-size);
-    color: var(--text-main);
-    line-height: 1.5;
-    transition: background 0.3s, color 0.3s;
-}
+body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; transition: background 0.3s, color 0.3s; }
 
 .main-container { max-width: 1200px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 24px; }
 
-/* Header Aplikasi */
-.app-header { background: var(--card-bg); border-bottom: 1px solid var(--card-border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); backdrop-filter: blur(8px); }
+.app-header { background: var(--card-bg); border-bottom: 1px solid var(--card-border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
 .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand-icon { width: 44px; height: 44px; background: var(--primary); color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
@@ -151,7 +121,6 @@ body {
 .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .theme-select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-weight: 600; cursor: pointer; }
 
-/* Style Kartu Estetik dengan Sudut Lembut */
 .aesthetic-card {
     background: var(--card-bg);
     border: 2px solid var(--card-border);
@@ -160,16 +129,13 @@ body {
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(8px);
 }
 
 .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
 .card-title-area h3 { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 .card-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
-/* Form Controls */
-.form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
-@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+.form-grid { display: grid; gap: 16px; margin-bottom: 16px; }
 
 .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
 .input-group input, .input-group select {
@@ -178,7 +144,6 @@ body {
 }
 .input-group input:focus, .input-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
-/* Tabel Estetik */
 .table-container { overflow-x: auto; margin-bottom: 16px; border-radius: 12px; border: 1px solid var(--card-border); }
 .aesthetic-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; background: var(--card-bg); }
 .aesthetic-table th {
@@ -190,7 +155,7 @@ body {
     border: 1px solid var(--table-border);
 }
 .aesthetic-table td {
-    padding: 12px;
+    padding: 10px 8px;
     border: 1px solid var(--table-border);
     color: var(--text-main);
 }
@@ -201,11 +166,12 @@ body {
     background: var(--card-bg); color: var(--text-main); font-size: 13px;
 }
 
-/* Footer Badge Total Item */
 .table-footer-badge {
     display: flex;
     justify-content: flex-end;
     margin-top: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 .total-badge-box {
     background: var(--badge-bg);
@@ -217,7 +183,6 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Buttons */
 .btn { padding: 10px 20px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; transition: 0.2s; }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -225,6 +190,7 @@ body {
 .btn-danger-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
 .btn-danger-outline:hover { background: #ef4444; color: #fff; }
 .btn-icon-del { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.btn-icon-edit { background: rgba(2, 132, 199, 0.1); color: #0284c7; border: none; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
 .export-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn-export {
