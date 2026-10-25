@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="su">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekap Konveksi Busana Muslim - Aestetik & Mobile Friendly</title>
+    <title>Rékap Konféksi Busana Muslim - Manajemén CV</title>
     
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,14 +22,14 @@
 </head>
 <body data-theme="sage">
 
-    <!-- Header Aplikasi -->
+    <!-- Masthead / Punduh Aplikasi -->
     <header class="app-header">
         <div class="header-content">
             <div class="brand">
                 <div class="brand-icon"><i class="fa-solid fa-shirt"></i></div>
                 <div>
-                    <h1>Konveksi Muslim Aestetik</h1>
-                    <p class="subtitle">Sistem Rekapitulasi Borongan & Gaji</p>
+                    <h1>Konféksi Muslim Aéstetis</h1>
+                    <p class="subtitle">Sistem Rékapitulasi Borongan & Gajih</p>
                 </div>
             </div>
             <div class="header-controls">
@@ -42,7 +42,7 @@
                     <option value="beige">📜 6. Beige Vintage</option>
                 </select>
                 <button class="btn btn-danger-outline" onclick="confirmResetAll()">
-                    <i class="fa-solid fa-rotate-right"></i> Reset Data
+                    <i class="fa-solid fa-rotate-right"></i> Kosongkeun Data
                 </button>
             </div>
         </div>
@@ -50,26 +50,26 @@
 
     <main class="main-container">
 
-        <!-- Form Input Borongan -->
+        <!-- Formulir Lebetkeun Data Borongan -->
         <section class="aesthetic-card">
             <div class="card-header-flex">
                 <div class="card-title-area">
-                    <h3><i class="fa-solid fa-pen-nib"></i> Masukkan Data Borongan Pekerja</h3>
-                    <p class="card-desc">Catat hasil pengerjaan harian atau mingguan pekerja dengan mudah.</p>
+                    <h3><i class="fa-solid fa-pen-nib"></i> Lebetkeun Catetan Borongan Pagawe</h3>
+                    <p class="card-desc">Mangga kintunkeun seratan padamelan harian atanapi mingguan kasebat di handap ieu.</p>
                 </div>
-                <span class="total-badge-box" id="periodDisplay">Minggu Ini</span>
+                <span class="total-badge-box" id="periodDisplay">Minggu Ieu</span>
             </div>
 
             <form id="boronganForm" onsubmit="saveWorkerEntry(event)">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label><i class="fa-solid fa-user"></i> Nama Pemilik / Pekerja</label>
-                        <input type="text" id="workerName" list="workerList" placeholder="Ketik atau pilih nama pekerja..." required autocomplete="off">
+                        <label><i class="fa-solid fa-user"></i> Nasta Pagawe / Mitra</label>
+                        <input type="text" id="workerName" list="workerList" placeholder="Ketik atanapi pilih nami pagawe..." required autocomplete="off">
                         <datalist id="workerList"></datalist>
                     </div>
                     <div class="input-group">
-                        <label><i class="fa-solid fa-tag"></i> Keterangan Shift / Catatan</label>
-                        <input type="text" id="entryNote" placeholder="Contoh: Lembur / Shift 1">
+                        <label><i class="fa-solid fa-tag"></i> Katrangan / Shift (Opsional)</label>
+                        <input type="text" id="entryNote" placeholder="Conto: Lembur / Shift 1">
                     </div>
                 </div>
 
@@ -77,12 +77,12 @@
                     <table class="aesthetic-table" id="itemsTable">
                         <thead>
                             <tr>
-                                <th style="width: 25%;">Nama Barang</th>
-                                <th style="width: 18%;">Tugas</th>
-                                <th style="width: 22%;">Jenis / Detail</th>
+                                <th style="width: 25%;">Nami Barang</th>
+                                <th style="width: 18%;">Pagawean</th>
+                                <th style="width: 22%;"> Wangun / Detail</th>
                                 <th style="width: 10%;">Jumlah</th>
                                 <th style="width: 15%;">Tarif (Rp)</th>
-                                <th style="width: 10%;">Aksi</th>
+                                <th style="width: 10%;"> Lampah</th>
                             </tr>
                         </thead>
                         <tbody id="itemsTbody"></tbody>
@@ -91,29 +91,29 @@
 
                 <div class="card-header-flex" style="margin-top: 16px; margin-bottom: 0;">
                     <button type="button" class="btn btn-secondary" onclick="addDynamicRow()">
-                        <i class="fa-solid fa-plus-circle"></i> Tambah Barang Lain
+                        <i class="fa-solid fa-plus-circle"></i> Tambih Barang Sanés
                     </button>
                     <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                        <span style="font-weight: 600;">Total: <strong id="formTotalSummary" style="color: var(--primary); font-size: 16px;">0 Pcs = Rp 0</strong></span>
+                        <span style="font-weight: 600;">Jumlah Total: <strong id="formTotalSummary" style="color: var(--primary); font-size: 16px;">0 Pcs = Rp 0</strong></span>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan
+                            <i class="fa-solid fa-floppy-disk"></i> Simpen Catetan
                         </button>
                     </div>
                 </div>
             </form>
         </section>
 
-        <!-- Tabel 1: Rekap Gaji Pekerja -->
+        <!-- Tabel 1: Rékapitulasi Gajih Pagawe -->
         <section class="aesthetic-card">
             <div class="card-header-flex">
                 <div class="card-title-area">
-                    <h3><i class="fa-solid fa-file-invoice-dollar"></i> Laporan Rekapitulasi Gaji Pekerja</h3>
-                    <p class="card-desc">Acuan untuk pembagian gaji mingguan per individu.</p>
+                    <h3><i class="fa-solid fa-file-invoice-dollar"></i> Laporan Rékapitulasi Gajih Pagawe</h3>
+                    <p class="card-desc">PerjDamelan ieu tiasa janten acuan pambagian gajih mingguan.</p>
                 </div>
                 <div class="export-actions">
-                    <button class="btn-export" onclick="exportTablePNG('payrollSection', 'Rekap_Gaji')"><i class="fa-solid fa-image"></i> PNG</button>
-                    <button class="btn-export" onclick="exportTablePDF('payrollSection', 'Rekap_Gaji')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                    <button class="btn-export" onclick="exportExcel('payrollSection', 'Rekap_Gaji')"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                    <button class="btn-export" onclick="exportTablePNG('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
+                    <button class="btn-export" onclick="exportTablePDF('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-file-pdf"></i> Unduh PDF</button>
+                    <button class="btn-export" onclick="exportExcel('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
                 </div>
             </div>
 
@@ -123,10 +123,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Pekerja</th>
-                                <th>Rincian Pekerjaan Selesai</th>
+                                <th>Nami Pagawe</th>
+                                <th>Rincian Pagawean Selesai</th>
                                 <th>Total Pcs</th>
-                                <th>Total Upah Gaji</th>
+                                <th>Total Upah Gajih</th>
                                 <th class="no-print" style="width: 60px;">Aksi</th>
                             </tr>
                         </thead>
@@ -139,17 +139,17 @@
             </div>
         </section>
 
-        <!-- Tabel 2: Rekap Laporan Jahit Khusus Atasan -->
+        <!-- Tabel 2: Laporan Hasil Jahit Kanggo Pimpinan -->
         <section class="aesthetic-card">
             <div class="card-header-flex">
                 <div class="card-title-area">
-                    <h3><i class="fa-solid fa-clipboard-list"></i> Laporan Hasil Jahit (Khusus Pimpinan)</h3>
-                    <p class="card-desc">Semua nama barang disatukan khusus tugas jahit untuk laporan minggu ini.</p>
+                    <h3><i class="fa-solid fa-clipboard-list"></i> Laporan Hasil Jahit (Kanggo Pimpinan)</h3>
+                    <p class="card-desc">Sadaya barang disatukeun khusus kana tugas jahit kanggo laporan minggu ieu.</p>
                 </div>
                 <div class="export-actions">
-                    <button class="btn-export" onclick="exportTablePNG('sewingSection', 'Laporan_Jahit')"><i class="fa-solid fa-image"></i> PNG</button>
-                    <button class="btn-export" onclick="exportTablePDF('sewingSection', 'Laporan_Jahit')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                    <button class="btn-export" onclick="exportExcel('sewingSection', 'Laporan_Jahit')"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                    <button class="btn-export" onclick="exportTablePNG('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
+                    <button class="btn-export" onclick="exportTablePDF('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-file-pdf"></i> Unduh PDF</button>
+                    <button class="btn-export" onclick="exportExcel('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
                 </div>
             </div>
 
@@ -159,8 +159,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Barang</th>
-                                <th>Jenis / Variasi</th>
+                                <th>Nami Barang</th>
+                                <th>Wangun / Variasi</th>
                                 <th>Total Produksi Jahit</th>
                             </tr>
                         </thead>
