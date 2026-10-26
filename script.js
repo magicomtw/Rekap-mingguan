@@ -245,7 +245,6 @@ function renderPayroll() {
         workerTotals[rec.workerName] = (workerTotals[rec.workerName] || 0) + workerSum;
     });
 
-    // Render rincian teks per orang
     let summaryHtml = '';
     for (const [wName, wTotal] of Object.entries(workerTotals)) {
         summaryHtml += `<span style="background: var(--card-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--card-border);"><strong>${wName}:</strong> ${formatRupiah(wTotal)}</span>`;
@@ -355,20 +354,13 @@ function confirmResetAll() {
     });
 }
 
-/* FUNGSI EKSPOR DENGAN PENYESUAIAN BAHASA INDONESIA & LATAR BELAKANG BERSIH */
-function getTemporaryExportTable(containerId) {
-    const originalSection = document.getElementById(containerId);
-    const clone = originalSection.cloneNode(true);
+/* FUNGSI EKSPOR PNG & EXCEL HANYA TABEL DENGAN WARNA TEMA PENUH */
+function getTemporaryExportContainer(sectionId) {
+    const section = document.getElementById(sectionId);
+    const tableContainer = section.querySelector('.table-container').cloneNode(true);
     
-    // Pastikan latar belakang kartu kloning mengambil warna tema secara penuh agar tidak ada area putih
-    clone.style.backgroundColor = getComputedStyle(originalSection).backgroundColor;
-    clone.style.padding = '20px';
-    clone.style.borderRadius = '20px';
-
-    // Hapus elemen yang memiliki class no-export (seperti info per orang dan total nominal gajih web)
-    clone.querySelectorAll('.no-export').forEach(el => el.remove());
-
-    clone.querySelectorAll('th').forEach(th => {
+    // Terjemahkan header tabel ke Bahasa Indonesia
+    tableContainer.querySelectorAll('th').forEach(th => {
         let text = th.innerText.trim();
         if (text === 'Nami Padamel') th.innerText = 'Nama Pekerja';
         if (text === 'Artikel') th.innerText = 'Artikel';
@@ -382,24 +374,43 @@ function getTemporaryExportTable(containerId) {
         if (text === 'Aksi') th.innerText = '';
     });
 
-    clone.querySelectorAll('tr').forEach(tr => {
+    // Hapus kolom aksi
+    tableContainer.querySelectorAll('tr').forEach(tr => {
         const lastCell = tr.lastElementChild;
         if (lastCell && (lastCell.classList.contains('no-print') || lastCell.innerHTML.includes('trash') || lastCell.innerHTML.includes('pen'))) {
             lastCell.remove();
         }
     });
 
-    return clone;
+    // Bungkus dalam wadah dengan latar belakang kartu yang bersih tanpa sisa putih
+    const wrapper = document.createElement('div');
+    const currentCardBg = getComputedStyle(section).backgroundColor;
+    const currentCardBorder = getComputedStyle(section).borderColor;
+
+    wrapper.style.backgroundColor = currentCardBg;
+    wrapper.style.padding = '16px';
+    wrapper.style.borderRadius = '16px';
+    wrapper.style.border = `2px solid ${currentCardBorder}`;
+    wrapper.style.display = 'inline-block';
+    
+    const table = tableContainer.querySelector('table');
+    table.style.margin = '0';
+    table.style.backgroundColor = currentCardBg;
+
+    wrapper.appendChild(tableContainer);
+    return wrapper;
 }
 
-function exportTablePNG(cardId, filename) {
-    const exportElement = getTemporaryExportTable(cardId);
+function exportTablePNG(sectionId, filename) {
+    const exportElement = getTemporaryExportContainer(sectionId);
     document.body.appendChild(exportElement);
     exportElement.style.position = 'absolute';
     exportElement.style.left = '-9999px';
-    exportElement.style.width = document.getElementById(cardId).offsetWidth + 'px';
 
-    html2canvas(exportElement, { scale: 2, backgroundColor: getComputedStyle(document.body).backgroundColor }).then(canvas => {
+    html2canvas(exportElement, { 
+        scale: 2, 
+        backgroundColor: null // Transparan agar mengikuti background wrapper kartu
+    }).then(canvas => {
         const link = document.createElement('a'); 
         link.download = `${filename}.png`; 
         link.href = canvas.toDataURL(); 
@@ -408,29 +419,8 @@ function exportTablePNG(cardId, filename) {
     });
 }
 
-function exportTablePDF(cardId, filename) {
-    const exportElement = getTemporaryExportTable(cardId);
-    document.body.appendChild(exportElement);
-    exportElement.style.position = 'absolute';
-    exportElement.style.left = '-9999px';
-    exportElement.style.width = '800px'; // Lebar tetap yang stabil untuk PDF
-
-    html2pdf().set({ 
-        margin: 0.4, 
-        filename: `${filename}.pdf`, 
-        image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: getComputedStyle(document.body).backgroundColor }, 
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } 
-    }).from(exportElement).save().then(() => {
-        exportElement.remove();
-    }).catch(err => {
-        console.error("PDF Export Error:", err);
-        exportElement.remove();
-    });
-}
-
 function exportExcel(sectionId, filename) {
-    const exportElement = getTemporaryExportTable(sectionId);
+    const exportElement = getTemporaryExportContainer(sectionId);
     const table = exportElement.querySelector('table');
     if (!table) return;
     const wb = XLSX.utils.table_to_book(table, { sheet: "Laporan" });
