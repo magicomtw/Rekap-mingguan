@@ -245,6 +245,7 @@ function renderPayroll() {
         workerTotals[rec.workerName] = (workerTotals[rec.workerName] || 0) + workerSum;
     });
 
+    // Render rincian teks per orang
     let summaryHtml = '';
     for (const [wName, wTotal] of Object.entries(workerTotals)) {
         summaryHtml += `<span style="background: var(--card-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--card-border);"><strong>${wName}:</strong> ${formatRupiah(wTotal)}</span>`;
@@ -354,22 +355,15 @@ function confirmResetAll() {
     });
 }
 
-/* FUNGSI EKSPOR PNG & EXCEL MURNI HANYA TABEL */
-function exportTablePNG(sectionId, filename) {
-    const originalCard = document.getElementById(sectionId);
-    const tableContainer = originalCard.querySelector('.table-container').cloneNode(true);
-    const cardBgColor = getComputedStyle(originalCard).backgroundColor;
-
-    const exportWrapper = document.createElement('div');
-    exportWrapper.style.backgroundColor = cardBgColor;
-    exportWrapper.style.padding = '16px';
-    exportWrapper.style.borderRadius = '12px';
-    exportWrapper.style.width = tableContainer.offsetWidth + 'px';
-
-    tableContainer.querySelectorAll('th').forEach(th => {
+/* FUNGSI EKSPOR DENGAN PENYESUAIAN BAHASA INDONESIA */
+function getTemporaryExportTable(containerId) {
+    const originalSection = document.getElementById(containerId);
+    const clone = originalSection.cloneNode(true);
+    
+    clone.querySelectorAll('th').forEach(th => {
         let text = th.innerText.trim();
         if (text === 'Nami Padamel') th.innerText = 'Nama Pekerja';
-        if (text === 'Artikel') th.innerText = 'Artikel';
+        if (text === 'Nami Barang') th.innerText = 'Nama Barang';
         if (text === 'Wangun / Jenis') th.innerText = 'Jenis';
         if (text === 'Ukuran') th.innerText = 'Ukuran';
         if (text === 'Warna') th.innerText = 'Warna';
@@ -380,57 +374,51 @@ function exportTablePNG(sectionId, filename) {
         if (text === 'Aksi') th.innerText = '';
     });
 
-    tableContainer.querySelectorAll('tr').forEach(tr => {
+    clone.querySelectorAll('tr').forEach(tr => {
         const lastCell = tr.lastElementChild;
         if (lastCell && (lastCell.classList.contains('no-print') || lastCell.innerHTML.includes('trash') || lastCell.innerHTML.includes('pen'))) {
             lastCell.remove();
         }
     });
 
-    exportWrapper.appendChild(tableContainer);
-    document.body.appendChild(exportWrapper);
-    exportWrapper.style.position = 'absolute';
-    exportWrapper.style.left = '-9999px';
+    return clone;
+}
 
-    html2canvas(exportWrapper, { 
-        scale: 2, 
-        backgroundColor: cardBgColor 
-    }).then(canvas => {
+function exportTablePNG(id, filename) {
+    const exportElement = getTemporaryExportTable(id);
+    document.body.appendChild(exportElement);
+    exportElement.style.position = 'absolute';
+    exportElement.style.left = '-9999px';
+
+    html2canvas(exportElement, { scale: 2 }).then(canvas => {
         const link = document.createElement('a'); 
         link.download = `${filename}.png`; 
         link.href = canvas.toDataURL(); 
         link.click();
-        exportWrapper.remove();
+        exportElement.remove();
     });
 }
 
-function exportExcel(sectionId, filename) {
-    const originalCard = document.getElementById(sectionId);
-    const tableContainer = originalCard.querySelector('.table-container').cloneNode(true);
-    
-    tableContainer.querySelectorAll('th').forEach(th => {
-        let text = th.innerText.trim();
-        if (text === 'Nami Padamel') th.innerText = 'Nama Pekerja';
-        if (text === 'Artikel') th.innerText = 'Artikel';
-        if (text === 'Wangun / Jenis') th.innerText = 'Jenis';
-        if (text === 'Ukuran') th.innerText = 'Ukuran';
-        if (text === 'Warna') th.innerText = 'Warna';
-        if (text === 'Tugas') th.innerText = 'Tugas';
-        if (text === 'Jumlah Pcs') th.innerText = 'Jumlah Pcs';
-        if (text === 'Total Upah Gajih') th.innerText = 'Total Gaji';
-        if (text === 'Total Produksi Jahit') th.innerText = 'Total Produksi Jahit';
-        if (text === 'Aksi') th.innerText = '';
-    });
+function exportTablePDF(id, filename) {
+    const exportElement = getTemporaryExportTable(id);
+    document.body.appendChild(exportElement);
+    exportElement.style.position = 'absolute';
+    exportElement.style.left = '-9999px';
 
-    tableContainer.querySelectorAll('tr').forEach(tr => {
-        const lastCell = tr.lastElementChild;
-        if (lastCell && (lastCell.classList.contains('no-print') || lastCell.innerHTML.includes('trash') || lastCell.innerHTML.includes('pen'))) {
-            lastCell.remove();
-        }
+    html2pdf().set({ 
+        margin: 0.5, 
+        filename: `${filename}.pdf`, 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { scale: 2 }, 
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } 
+    }).from(exportElement).save().then(() => {
+        exportElement.remove();
     });
+}
 
-    const table = tableContainer.querySelector('table');
-    if (!table) return;
+function exportExcel(id, filename) {
+    const exportElement = getTemporaryExportTable(id);
+    const table = exportElement.querySelector('table');
     const wb = XLSX.utils.table_to_book(table, { sheet: "Laporan" });
     XLSX.writeFile(wb, `${filename}.xlsx`);
 }
