@@ -16,6 +16,7 @@
 
     <!-- External Libraries for Export & UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -72,7 +73,7 @@
                     <table class="aesthetic-table" id="itemsTable">
                         <thead>
                             <tr>
-                                <th style="width: 18%;">Artikel</th>
+                                <th style="width: 18%;">Nami Barang</th>
                                 <th style="width: 14%;">Wangun / Jenis</th>
                                 <th style="width: 10%;">Ukuran</th>
                                 <th style="width: 12%;">Warna</th>
@@ -102,28 +103,33 @@
         </section>
 
         <!-- Tabel 1: Rékapitulasi Gajih Padamel -->
-        <section class="aesthetic-card" id="payrollCard">
-            <div class="card-header-flex" style="justify-content: flex-end;">
+        <section class="aesthetic-card">
+            <div class="card-header-flex">
+                <div class="card-title-area">
+                    <h3><i class="fa-solid fa-file-invoice-dollar"></i> Laporan Rékapitulasi Gajih Padamel</h3>
+                    <p class="card-desc">Perkawis ieu tiasa janten acuan pambagian gajih mingguan.</p>
+                </div>
                 <div class="export-actions">
-                    <button class="btn-export" onclick="exportTablePNG('payrollCard', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
-                    <button class="btn-export" onclick="exportExcel('payrollCard', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
+                    <button class="btn-export" onclick="exportTablePNG('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
+                    <button class="btn-export" onclick="exportTablePDF('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-file-pdf"></i> Unduh PDF</button>
+                    <button class="btn-export" onclick="exportExcel('payrollSection', 'Rekap_Gaji_Pekerja')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
                 </div>
             </div>
 
-            <!-- Keterangan total jumlah gaji setiap orang (hanya di web) -->
-            <div id="workerSummaryNote" class="no-export" style="margin-bottom: 14px; padding: 12px 16px; background: var(--primary-light); border-radius: 12px; font-size: 13px; color: var(--text-main); display: flex; flex-direction: column; gap: 4px;">
+            <!-- Keterangan total jumlah gaji setiap orang (tidak ikut terunduh) -->
+            <div id="workerSummaryNote" style="margin-bottom: 14px; padding: 12px 16px; background: var(--primary-light); border-radius: 12px; font-size: 13px; color: var(--text-main); display: flex; flex-direction: column; gap: 4px;">
                 <strong style="color: var(--primary);"><i class="fa-solid fa-circle-info"></i> Rincian Gajih Per Padamel:</strong>
                 <div id="workerSummaryList" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px;">-</div>
             </div>
 
             <div id="payrollSection">
-                <div class="table-container" style="margin-bottom: 0;">
+                <div class="table-container">
                     <table class="aesthetic-table">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Nami Padamel</th>
-                                <th>Artikel</th>
+                                <th>Nami Barang</th>
                                 <th>Wangun / Jenis</th>
                                 <th>Ukuran</th>
                                 <th>Warna</th>
@@ -136,29 +142,33 @@
                         <tbody id="payrollTbody"></tbody>
                     </table>
                 </div>
-                <!-- Total sadaya gajih khusus web (tidak ikut terunduh) -->
-                <div class="table-footer-badge no-export" style="justify-content: flex-end;">
+                <div class="table-footer-badge" style="justify-content: flex-end;">
                     <div class="total-badge-box" id="totalNominalPayrollBadge">Total Sadaya Gajih: Rp 0</div>
                 </div>
             </div>
         </section>
 
         <!-- Tabel 2: Laporan Hasil Jahit -->
-        <section class="aesthetic-card" id="sewingCard">
-            <div class="card-header-flex" style="justify-content: flex-end;">
+        <section class="aesthetic-card">
+            <div class="card-header-flex">
+                <div class="card-title-area">
+                    <h3><i class="fa-solid fa-clipboard-list"></i> Laporan Hasil Jahit</h3>
+                    <p class="card-desc">Sadaya barang disatukeun khusus kana tugas jahit kalawan rinci.</p>
+                </div>
                 <div class="export-actions">
-                    <button class="btn-export" onclick="exportTablePNG('sewingCard', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
-                    <button class="btn-export" onclick="exportExcel('sewingCard', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
+                    <button class="btn-export" onclick="exportTablePNG('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-image"></i> Unduh PNG</button>
+                    <button class="btn-export" onclick="exportTablePDF('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-file-pdf"></i> Unduh PDF</button>
+                    <button class="btn-export" onclick="exportExcel('sewingSection', 'Laporan_Hasil_Jahit')"><i class="fa-solid fa-file-excel"></i> Unduh Excel</button>
                 </div>
             </div>
 
             <div id="sewingSection">
-                <div class="table-container" style="margin-bottom: 0;">
+                <div class="table-container">
                     <table class="aesthetic-table">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Artikel</th>
+                                <th>Nami Barang</th>
                                 <th>Wangun / Jenis</th>
                                 <th>Ukuran</th>
                                 <th>Warna</th>
